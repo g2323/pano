@@ -13,6 +13,7 @@
 			import { MathUtils } from './js/three/src/math/MathUtils.js';
 			import { OrbitControls } from './js/three/examples/jsm/controls/OrbitControls.js';
 			import { VRButton } from './js/three/examples/jsm/webxr/VRButton.js';
+			import { GLTFLoader } from './js/three/examples/jsm/loaders/GLTFLoader.js';
 
 			const scene = new THREE.Scene();
 			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
@@ -40,17 +41,51 @@
 			const geometry = new THREE.CylinderBufferGeometry(3, 3, 3, 64, 1, true, Math.PI / 2.0, Math.PI );
 			//invert 
 			geometry.scale( - 1, 1, 1 );
-			const texture = new THREE.TextureLoader().load( 'textures/PANO_001.jpeg' );
+			const texture = new THREE.TextureLoader().load( './assets/textures/PANO_001.jpeg' );
 			const material = new THREE.MeshBasicMaterial( { map: texture } );
 			const pano = new THREE.Mesh( geometry, material );
 			pano.position.y = 1.5;
 			scene.add( pano );
+
+			//baggage
+			const loader = new GLTFLoader();
+			var model;
+
+                        loader.load( './assets/world/Koffer1.glb', function ( gltf ) {
+                                model = gltf.scene;
+                                model.castShadow = true; //default is false
+                                model.receiveShadow = false; //default
+                                model.position.y = 0.05;
+
+                                scene.add( model );
+                        }, undefined, function ( error ) {
+                                console.error( error );
+                        } );
+
+			//light
+                	//color,intensity,range,decay
+			const pointLight = new THREE.PointLight(0xFFFFFF,10,0,2);
+
+                        // set its position
+                        pointLight.position.x = 0;
+                        pointLight.position.y = 5;
+                        pointLight.position.z = 5;
+
+                        pointLight.shadow.mapSize.width = 512; // default
+                        pointLight.shadow.mapSize.height = 512; // default
+                        pointLight.shadow.camera.near = 0.5; // default
+                        pointLight.shadow.camera.far = 500; // default
+                        
+			scene.add(pointLight);
 
 			
 			renderer.xr.enabled = true;
 			controls.update();
 
 			renderer.setAnimationLoop( function () {
+                                if (model) {
+                			model.rotation.y += MathUtils.degToRad(0.1);
+                                }
 				//controls.update();
                                 renderer.render( scene, camera );
 
