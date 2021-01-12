@@ -2,7 +2,8 @@ import * as THREE from '../js/three/build/three.module.js';
 import { MathUtils } from '../js/three/src/math/MathUtils.js';
 
 class MapState {
-	constructor(width, height, zoomLevel, canvasId, tilesServiceUrl, centerLatitude, centerLongitude, centerViewX, centerViewY, dx, dy) {
+	constructor(imageIndex, width, height, zoomLevel, canvasId, tilesServiceUrl, centerLatitude, centerLongitude, centerViewX, centerViewY, window) {
+		this.imageIndex = imageIndex;
 		this.width = width;
 		this.height = height;
 		this.zoomLevel = zoomLevel;
@@ -12,8 +13,7 @@ class MapState {
 		this.centerLongitude = centerLongitude
 		this.centerViewX = centerViewX;
 		this.centerViewY = centerViewY;
-		this.dx = dx;
-		this.dy = dy;
+		this.window = window;
 
 		this.canvas = document.createElement( 'canvas' );
 		this.canvas.setAttribute('width', this.width);
@@ -38,7 +38,7 @@ export const appMapState = (function() {
 	console.log( 'Create global map state.' );
 	// Köln: 50/57/28 N 7/2/40 O
 	// Lat 50.957689 (Y) - Long:7.044405 (X)
-	const sharedMapState = new MapState(512, 512, 12, 'offscreen_map_canvas', 'http://map.psi.de/tiles/', 50.957689, 7.044405, 0.5, 0.5, 0.0, 0.0);
+	const sharedMapState = new MapState(0, 512, 512, 12, 'offscreen_map_canvas', 'http://map.psi.de/tiles/', 50.957689, 7.044405, 0.5, 0.5);
 
 	return function() {
 		return sharedMapState;
