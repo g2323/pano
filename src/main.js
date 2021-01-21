@@ -13,23 +13,31 @@ import * as SPHERE_PANO from './sphere_pano.js';
 
 import * as VIDEO_PANO from './video_pano.js';
 import * as VIDEO_LIVE_PANO from './video_live_pano.js';
+import * as CCTV_PANO from './cctv_pano.js';
 
 import * as IFRAME_PANO from './iframe_pano.js';
 
 import * as MANAGER from './pano_manager.js';
 
 import * as TERMINAL from './map_terminal.js';
+import * as TILES_MAP from './map_pano.js';
+//import * as HARP from './harp_map.js';
+
 import * as LIGHT from './light.js';
 
 //import * as AXIS from '../js/axis/media-stream-library.min.js';
 //import * as PLAYER from './axis-simple-player.js';
 
 
-main();
+MANAGER.init()
+.then(() => createScene())
+.catch((message) => {
+	console.log(message);
+});
 
-function main() {
 
-	MANAGER.parseImages();
+function createScene() {
+	// return new Promise((resolve, reject) => {
 
 	const webgl_scene = new THREE.Scene();
 	const css3d_scene = new THREE.Scene();
@@ -37,8 +45,8 @@ function main() {
 	const webgl_container = document.getElementById( 'webgl_container' );
 	const css3d_container = document.getElementById( 'css3d_container' );
 
-	const camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1.0, 1024 );
-	camera.position.set(0, 0, 1);
+	const camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1.0, 2048 );
+	//camera.position.set(0, 0, 0);
 
 
 	const webgl_renderer = new THREE.WebGLRenderer({ alpha: true });
@@ -56,15 +64,9 @@ function main() {
 	css3d_container.appendChild( css3d_renderer.domElement );
 
 
-
-
-
-
 	//const controls = new OrbitControls( camera, renderer.domElement );
 	//controls.target = new THREE.Vector3( 0, 2, -256 );  // should point to map terminal
 	//controls.enableZoom = false; // no dollying
-
-
 
 	const floor_plane = FLOORPLANE.floorplane(webgl_scene);
 
@@ -80,7 +82,8 @@ function main() {
 	const controls = new TrackballControls( camera, webgl_renderer.domElement );
 	controls.noRotate = false;
 	controls.noZoom = false;
-	controls.noPan = true;
+	controls.noPan = false;
+	controls.target.set(0, 0, -0.1);
 
 
 	document.addEventListener("keydown", onDocumentKeyDown, false);
@@ -112,6 +115,8 @@ function main() {
 		css3d_renderer.render( css3d_scene, camera );
 
 	} );
+
+	// resolve(); // resolve promise
 
 	async function onDocumentKeyDown(event) {
 		var key = event.key;
@@ -165,12 +170,18 @@ function main() {
 		} else if (MANAGER.getSelectedPanoConfiguration().type == 'Video-2D'
 		|| MANAGER.getSelectedPanoConfiguration().type == 'Video-360-2D') {
 			current_webgl_pano = VIDEO_PANO.addMeshToScene(webgl_scene);
+		} else if (MANAGER.getSelectedPanoConfiguration().type == 'cctv') {
+			current_webgl_pano = CCTV_PANO.addMeshToScene(webgl_scene);
 		} else if (MANAGER.getSelectedPanoConfiguration().type == 'Video2D_Stream_Axis') {
 			current_webgl_pano = VIDEO_LIVE_PANO.addMeshToScene(webgl_scene);
 		} else if (MANAGER.getSelectedPanoConfiguration().type == 'Object-3D') {
 			current_webgl_object = OBJECT_3D.addMeshToScene(webgl_scene);
 		} else if (MANAGER.getSelectedPanoConfiguration().type == 'iframe_overlay') {
 			current_css3d_pano = IFRAME_PANO.addMeshToScene(css3d_scene);
+			// } else if (MANAGER.getSelectedPanoConfiguration().type == 'harp-map') {
+			// 	current_webgl_pano = HARP.addMeshToScene(webgl_scene);
+		} else if (MANAGER.getSelectedPanoConfiguration().type == 'tiles-map') {
+			current_webgl_pano = TILES_MAP.addMeshToScene(webgl_scene);
 		} else if (MANAGER.getSelectedPanoConfiguration().type == 'url') {
 			// this never returns
 			window.location.assign(MANAGER.getSelectedPanoConfiguration().url);
@@ -191,5 +202,6 @@ function main() {
 
 	}
 
+	// });
 
 }

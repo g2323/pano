@@ -15,11 +15,16 @@
 		<div id="blocker">
 		</div>
 
-		<video id="video" style="display:none;" autoplay>
+		<video id="video" style="display:none;" autoplay crossorigin="anonymous">
 		</video>
+
+		<canvas id="map">
+		</canvas>
 
 		<script src="./js/axis/media-stream-library.min.js"></script>
 		<script src="./src/axis-simple-player.js"></script>
+		<script src="./js/three/build/three.module.js"></script>
+		<script src="./js/harp.gl/harp.js"></script>
 
 		<script type="module" src="./src/main.js"></script>
 	</body>
