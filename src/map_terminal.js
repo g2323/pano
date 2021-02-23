@@ -1,25 +1,26 @@
 import * as THREE from '../js/three/build/three.module.js';
 import { MathUtils } from '../js/three/src/math/MathUtils.js';
+import { getAppState } from './app_state.js';
 import * as MAP from './map_state.js';
 import * as MAPUTIL from './map_util.js';
 
 export function addMeshToScene(scene) {
 
 	//map plane
-	const map_control_geometry = new THREE.BoxBufferGeometry( 40.0, 80.0, 2.0 );
+	const map_control_geometry = new THREE.BoxBufferGeometry( 40.0, 100.0, 5.0 );
 	const map_control_material = new THREE.MeshBasicMaterial( { color: 0x333333 } );
 	const map_control_mesh = new THREE.Mesh( map_control_geometry, map_control_material );
 
 	loadTextures(false);
 
 	const map_geometry = new THREE.PlaneGeometry( 32.0, 32.0);
-	const map_texture = MAP.appMapState().dynamicMapTexture();
+	const map_texture = getAppState().dynamicMapTexture();
 	const map_material = new THREE.MeshBasicMaterial( { map: map_texture } );
 	//map_texture.needsUpdate = true; // ???
 	//map_material.needsUpdate = true; // ???
 	const map_mesh = new THREE.Mesh( map_geometry, map_material );
-	map_mesh.position.y = 20.0;
-	map_mesh.position.z = 1.2;
+	map_mesh.position.y = 30.0;
+	map_mesh.position.z = 2.6;
 
 	const map_group = new THREE.Group();
 	map_group.add( map_control_mesh );
@@ -37,9 +38,9 @@ export function addMeshToScene(scene) {
 
 function loadTextures(keepScale) {
 	//const loader = new THREE.ImageLoader();
-	const canvas = MAP.appMapState().offscreenMapCanvas();
+	const canvas = getAppState().offscreenMapCanvas();
 	const context2d = canvas.getContext( '2d' );
-	const map_texture = MAP.appMapState().dynamicMapTexture();
+	const map_texture = getAppState().dynamicMapTexture();
 
 	var dx = 0.0;
 	var dy = 0.0;
@@ -117,13 +118,13 @@ function loadTextures(keepScale) {
 
 		dx = ((MAPUTIL.longitude2norm(MAP.appMapState().centerLongitude) - longMin) / (longMax - longMin));
 		dy = ((MAPUTIL.latitude2norm(MAP.appMapState().centerLatitude) - latMin) / (latMax - latMin));
-		console.log('dy: ' + dy + ' left ' + left + ' upper ' + upper);
+		//console.log('dy: ' + dy + ' left ' + left + ' upper ' + upper);
 		//if (dy < 0.0) { dy += 1.0; };
 
 
 		function loadImage( url ) {
 			return new Promise( resolve => {
-				console.log( 'loading image ');
+				//console.log( 'loading image ');
 				new THREE.ImageLoader().load(url, resolve );
 			})
 		}
@@ -178,7 +179,7 @@ function loadTextures(keepScale) {
 
 function onDocumentKeyDown(event) {
 	var key = event.key;
-	const map_texture = MAP.appMapState().dynamicMapTexture();
+	const map_texture = getAppState().dynamicMapTexture();
 	const zoomLevel = MAP.appMapState().zoomLevel;
 	const panStep = 5.0 / Math.pow(2, zoomLevel);
 	var needsReloadTextures = false;
@@ -269,7 +270,7 @@ function onDocumentKeyDown(event) {
 } //onDocumentKeyDown
 
 function drawPanoCoordinates(context2d) {
-	MAP.appMapState().panoList.forEach((item, index) => {
+	getAppState().panoList.forEach((item, index) => {
 		const longMin = MAP.appMapState().window.longMin;
 		const longMax = MAP.appMapState().window.longMax;
 		const latMin = MAP.appMapState().window.latMin;

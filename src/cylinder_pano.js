@@ -1,6 +1,5 @@
 import * as THREE from '../js/three/build/three.module.js';
 import { MathUtils } from '../js/three/src/math/MathUtils.js';
-import * as MAP from './map_state.js';
 import * as MANAGER from './pano_manager.js';
 
 

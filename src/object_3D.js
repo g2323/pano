@@ -29,8 +29,8 @@ export function addMeshToScene(scene) {
 
   } );
 
-  group.position.set( 60.0, -150.0, -256.0 );
-  group.scale.set( 50.0, 50.0, 50.0 );
+  group.position.set( 40.0, -50.0, -350.0 );
+  group.scale.set( 150.0, 150.0, 150.0 );
   scene.add( group );
 
   return group;

@@ -1,7 +1,8 @@
 import * as THREE from '../js/three/build/three.module.js';
 import { MathUtils } from '../js/three/src/math/MathUtils.js';
 import * as EXIFR from '../js/exifr/dist/lite.esm.js';
-import * as MAP from './map_state.js';
+
+import { getAppState } from './app_state.js';
 
 var panoList = null;
 
@@ -26,7 +27,7 @@ function loadConfiguration(url) {
 function setPanoList(list) {
 	return new Promise((resolve, reject) => {
 		panoList = list;
-		MAP.appMapState().panoList = panoList;
+		getAppState().panoList = panoList;
 		resolve(list); // returns the list
 	});
 }
@@ -35,11 +36,6 @@ function getPanoList() {
 	return panoList;
 }
 
-
-
-//var index = MAP.appMapState().imageIndex;
-//index++;
-//index%= panoList.length;
 
 export function getPanoConfiguration(index) {
 	if (index < 0) {
@@ -53,21 +49,25 @@ export function getPanoConfiguration(index) {
 }
 
 export function getSelectedPanoConfiguration() {
-	return getPanoConfiguration(MAP.appMapState().imageIndex);
+	return getPanoConfiguration(getAppState().imageIndex);
 }
 
 export function getNextPanoConfiguration() {
-	var index = MAP.appMapState().imageIndex;
+	var index = getAppState().imageIndex;
 	index++;
 	index%= getPanoListSize();
 	return getPanoConfiguration(index);
 }
 
-export function selectNextPanoConfiguration() {
-	var index = MAP.appMapState().imageIndex;
-	index++;
-	index%= getPanoListSize();
-	MAP.appMapState().imageIndex = index;
+export function selectNextPanoConfiguration(forward = true) {
+	var index = getAppState().imageIndex;
+	if (forward) {
+		index++;
+		index%= getPanoListSize();
+	} else {
+		index = (index > 0)? index - 1 : getPanoListSize() - 1;
+	}
+	getAppState().imageIndex = index;
 	console.log('next image ' + index);
 	return getPanoConfiguration(index);
 }
@@ -95,7 +95,7 @@ function parseImage(item, index) {
 		// });
 		EXIFR.parse(item.url)
 		.then(output => {
-			console.log(item.url);
+			//console.log(item.url);
 			if (output) {
 				console.log(output);
 

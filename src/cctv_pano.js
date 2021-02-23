@@ -1,36 +1,37 @@
 import * as THREE from '../js/three/build/three.module.js';
 import { MathUtils } from '../js/three/src/math/MathUtils.js';
+import * as MANAGER from './pano_manager.js';
 
-import * as MAP from './map_state.js';
+import { getAppState } from './app_state.js';
 
 export function addMeshToScene(scene) {
 
 	setup();
 
-	const map_geometry = new THREE.CylinderBufferGeometry(512, 512, 480, 64, 1, true, 0.8 * Math.PI, 0.4 * Math.PI );
-	map_geometry.scale( - 1, 1, 1 );
-	const map_texture = MAP.appMapState().dynamicMapTextureCCTV();
-	const map_material = new THREE.MeshBasicMaterial( { map: map_texture } );
+	const geometry = new THREE.CylinderBufferGeometry(512, 512, 480, 64, 1, true, 0.8 * Math.PI, 0.4 * Math.PI );
+	geometry.scale( - 1, 1, 1 );
+	const texture = getAppState().dynamicMapTextureCCTV();
+	const material = new THREE.MeshBasicMaterial( { map: texture } );
 	//map_texture.needsUpdate = true; // ???
 	//map_material.needsUpdate = true; // ???
-	const map_mesh = new THREE.Mesh( map_geometry, map_material );
-	map_mesh.position.y = 0.0;
-	map_mesh.position.z = 0.0;
+	const mesh = new THREE.Mesh( geometry, material );
+	mesh.position.y = -100.0;
+	mesh.position.z = 0.0;
 
-	scene.add( map_mesh );
+	scene.add( mesh );
 	//document.addEventListener("keydown", onDocumentKeyDown, false);
 
-	return map_mesh;
+	return mesh;
 }
 
 // Initialize WebSocket connection and event handlers
 function setup() {
 
-	const wsUri = "ws://applied-math-vision.com:4000";
+	const wsUri = MANAGER.getSelectedPanoConfiguration().url;
 
-	const canvas = MAP.appMapState().offscreenCanvasCCTV();
+	const canvas = getAppState().offscreenCanvasCCTV();
 	const context2d = canvas.getContext( '2d' );
-	const map_texture = MAP.appMapState().dynamicMapTextureCCTV();
+	const map_texture = getAppState().dynamicMapTextureCCTV();
 
 	const ws = new WebSocket(wsUri);
 
@@ -73,11 +74,28 @@ function setup() {
 				//var image = '<img src="' + e.data + '" />';
 				//imagePlaceholder.innerHTML = image;
 
+				var serverAnswer = JSON.parse(e.data);
+				var img = serverAnswer.image;
+				var rects = serverAnswer.rects;
+
 				var image = new Image();
-				image.src = e.data;
+				image.src = img;
 
 				image.onload = function() {
+					//var metaData = e.data.substring(s-256,s);
+					//var rects = JSON.parse(metaData);
 					context2d.drawImage(image, 0, 0);
+					for (var i = 0; i<rects.length - 1; i++) {
+						//
+						var r = rects[i];
+						context2d.beginPath();
+						context2d.lineWidth = "6";
+						context2d.strokeStyle = "#00ff00";
+						context2d.rect(r.x,r.y,r.width,r.height);
+						context2d.stroke();
+					}
+
+
 					map_texture.needsUpdate = true;
 				};
 

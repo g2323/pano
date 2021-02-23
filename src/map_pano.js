@@ -1,5 +1,7 @@
 import * as THREE from '../js/three/build/three.module.js';
 import { MathUtils } from '../js/three/src/math/MathUtils.js';
+
+import { getAppState } from './app_state.js';
 import * as MAP from './map_state.js';
 import * as MAPUTIL from './map_util.js';
 
@@ -9,7 +11,7 @@ export function addMeshToScene(scene) {
 
 	const map_geometry = new THREE.CylinderBufferGeometry(512, 512, 1024, 64, 1, true, 0.0, 2 * Math.PI );
 	map_geometry.scale( - 1, 1, 1 );
-	const map_texture = MAP.appMapState().dynamicMapTextureHiRes();
+	const map_texture = getAppState().dynamicMapTextureHiRes();
 	const map_material = new THREE.MeshBasicMaterial( { map: map_texture } );
 	//map_texture.needsUpdate = true; // ???
 	//map_material.needsUpdate = true; // ???
@@ -26,9 +28,9 @@ export function addMeshToScene(scene) {
 
 function loadTextures(keepScale) {
 	//const loader = new THREE.ImageLoader();
-	const canvas = MAP.appMapState().offscreenMapCanvasHiRes();
+	const canvas = getAppState().offscreenMapCanvasHiRes();
 	const context2d = canvas.getContext( '2d' );
-	const map_texture = MAP.appMapState().dynamicMapTextureHiRes();
+	const map_texture = getAppState().dynamicMapTextureHiRes();
 
 	var dx = 0.0;
 	var dy = 0.0;
@@ -60,8 +62,8 @@ function loadTextures(keepScale) {
 		const left = (MAPUTIL.longitude2norm(MAP.appMapState().centerLongitude) <= ((longMin + longMax)/2.0))? true : false;
 		const upper = (MAPUTIL.latitude2norm(MAP.appMapState().centerLatitude) <= ((latMin + latMax)/2.0))? true : false;
 
-		const tpr = MAP.appMapState().canvasTPR;
-		const tpc = MAP.appMapState().canvasTPC;
+		const tpr = getAppState().canvasTPR;
+		const tpc = getAppState().canvasTPC;
 
 		const maxTiles = Math.pow(2,zoomLevel);
 
@@ -135,7 +137,7 @@ function loadTextures(keepScale) {
 
 		function loadImage( url ) {
 			return new Promise( resolve => {
-				console.log( 'loading image ');
+				//console.log( 'loading image ');
 				new THREE.ImageLoader().load(url, resolve );
 			})
 		}
@@ -150,7 +152,7 @@ function loadTextures(keepScale) {
 		}
 
 		Promise.all(promises).then(() => {
-			console.log( 'habe alles geladen ');
+			//console.log( 'habe alles geladen ');
 			// context2d.beginPath();
 			// context2d.arc((dx) * 512, (dy) * 512, 5, 0, 2 * Math.PI);
 			// context2d.fill();
@@ -173,7 +175,7 @@ function loadTextures(keepScale) {
 	};
 
 	function textureOnLoad ( image, x, y, w, h ) {
-		console.log( `textureOnLoad: ${x}, ${y}, ${w}, ${h}`);
+		//console.log( `textureOnLoad: ${x}, ${y}, ${w}, ${h}`);
 		//const map_texture = dynamicMapTexture();
 		context2d.drawImage( image, x, y, w, h );
 
@@ -192,7 +194,7 @@ function loadTextures(keepScale) {
 
 
 function drawPanoCoordinates(context2d) {
-	MAP.appMapState().panoList.forEach((item, index) => {
+	getAppState().panoList.forEach((item, index) => {
 		const longMin = MAP.appMapState().window_HiRes.longMin;
 		const longMax = MAP.appMapState().window_HiRes.longMax;
 		const latMin = MAP.appMapState().window_HiRes.latMin;

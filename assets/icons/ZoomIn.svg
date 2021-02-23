@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 12.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 51448)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_svg "http://www.w3.org/2000/svg">
+	<!ENTITY ns_xlink "http://www.w3.org/1999/xlink">
+]>
+<svg  version="1.1" id="Ebene_1" xmlns="&ns_svg;" xmlns:xlink="&ns_xlink;" width="19" height="19" viewBox="0 0 19 19"
+	 overflow="visible" enable-background="new 0 0 19 19" xml:space="preserve">
+<path fill="#F7F7F7" d="M16,17c0,0.551-0.449,1-1,1H4c-0.551,0-1-0.449-1-1V2c0-0.551,0.449-1,1-1h9v1c0,1.1,0.9,2,2,2h1V17z"/>
+<path fill="#696969" d="M16,2l-1-1l-1-1h-1H4C2.899,0,2,0.9,2,2v15c0,1.1,0.899,2,2,2h11c1.1,0,2-0.9,2-2V4V3L16,2z M4,18
+	c-0.551,0-1-0.449-1-1V2c0-0.551,0.449-1,1-1h9v1c0,1.1,0.9,2,2,2h1v13c0,0.043-0.02,0.079-0.023,0.121l-2.506-3.417L13.3,13.473
+	c1.046-1.002,1.7-2.41,1.7-3.973C15,6.462,12.539,4,9.5,4S4,6.462,4,9.5C4,12.54,6.461,15,9.5,15c1.115,0,2.15-0.334,3.018-0.902
+	l0.146,0.198l2.667,3.638C15.227,17.971,15.117,18,15,18H4z M9.5,14C7.019,14,5,11.98,5,9.5C5,7.019,7.019,5,9.5,5
+	C11.98,5,14,7.019,14,9.5C14,11.98,11.98,14,9.5,14z"/>
+<polygon fill="#696969" points="12,9 10,9 10,7 9,7 9,9 7,9 7,10 9,10 9,12 10,12 10,10 12,10 "/>
+</svg>

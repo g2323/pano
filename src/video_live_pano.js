@@ -1,6 +1,6 @@
 import * as THREE from '../js/three/build/three.module.js';
 import { MathUtils } from '../js/three/src/math/MathUtils.js';
-import * as MAP from './map_state.js';
+
 import * as MANAGER from './pano_manager.js';
 import * as AXIS from '../js/axis/media-stream-library.min.js';
 //import * as PLAYER from './axis-simple-player.js';
